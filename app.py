@@ -1,3 +1,6 @@
+#Python 3.10
+import urllib.request
+import urllib.parse
 import streamlit as st
 import investpy as ip
 from datetime import datetime, timedelta
@@ -44,6 +47,7 @@ def plotCandleStick(df, acao='ticket'):
 
 # CRIANDO UMA BARRA LATERAL
 barra_lateral = st.sidebar.empty()
+# CAIXA PARA SELEÇÃO  NA BARRA LATERAL
 country_select = st.sidebar.selectbox("Selecione o país:", countries)
 acoes = ip.get_stocks_list(country=country_select)
 stock_select = st.sidebar.selectbox("Selecione o ativo:", acoes)
@@ -57,23 +61,23 @@ grafico_line = st.empty()
 grafico_candle = st.empty()
 
 # elementos centrais da página
-st.title('Stock Monitor')
+st.title('Actions Monitor')
 
-st.header('Ações')
+st.header('Actions')
 
-st.subheader('Visualização gráfica')
+st.subheader('View graph')
 
-
+#VERIFICANDO ERROS DE ENTRADA
 if from_date > to_date:
     st.sidebar.error('Data de ínicio maior do que data final')
 else:
     df = consultar_acao(stock_select, country_select, format_date(
         from_date), format_date(to_date), interval_select)
     try:
-        fig = plotCandleStick(df)
+        fig = plotCandleStick(df)#CRIANDO GRÁFICO
         grafico_candle = st.plotly_chart(fig)
         grafico_line = st.line_chart(df.Close)
-        if carregar_dados:
+        if carregar_dados:#se opção de carregar dados for selecionada
             st.subheader('Dados')
             dados = st.dataframe(df)
             stock_select = st.sidebar.selectbox
